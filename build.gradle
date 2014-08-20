@@ -1,0 +1,26 @@
+apply plugin: 'maven'
+apply plugin: 'groovy'
+
+group = 'com.droidtitan'
+version = '0.1.0'
+
+dependencies {
+  repositories {
+    mavenCentral()
+  }
+
+  compile gradleApi()
+  compile 'org.codehaus.groovy:groovy-all:2.2.+'
+}
+
+install {
+  repositories.mavenInstaller {
+    pom.artifactId = 'lint-cleaner-plugin'
+  }
+}
+
+uploadArchives {
+  repositories.mavenDeployer {
+    pom.artifactId = 'lint-cleaner-plugin'
+  }
+}
