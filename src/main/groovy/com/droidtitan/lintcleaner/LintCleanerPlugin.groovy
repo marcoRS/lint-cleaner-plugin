@@ -16,7 +16,5 @@ class LintCleanerPlugin implements Plugin<Project> {
       group = GROUP
       description = LINT_CLEAN_DESCRIPTION
     }
-
-    project.tasks.build.dependsOn LINT_CLEAN_TASK
   }
 }

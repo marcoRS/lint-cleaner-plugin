@@ -24,13 +24,8 @@ class LintCleanerTask extends DefaultTask {
   final Map<String, List<String>> filePathToLines = new HashMap<String, ArrayList<String>>()
   String lintXmlFilePath = "$project.buildDir/outputs/lint-results.xml"
   boolean ignoreResFiles = false
-  boolean run = true
 
   @TaskAction void removeUnusedResources() {
-    if (!run) {
-      return
-    }
-
     if (!lintXmlFilePath || lintXmlFilePath.empty) {
       println 'Lint results xml file path is unspecified'
       return

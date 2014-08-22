@@ -22,13 +22,16 @@ apply plugin: 'android'
 apply plugin: 'com.droidtitan.lintcleaner'
 ```
 
+
+Finally, to remove unused resources use: 
+     
+    gradle lintClean
+
 ## Optional Configuration using DSL
 
 ```groovy
 lintClean {
-    // Plugin runs by default, set to false to stop running.
-    run = false
-    // Removes unused strings, colors, dimens by default.
+    // Default configuration removes unused strings, colors, dimens.
     ignoreResFiles = false
     // Default configuration uses build/outputs/lint-results.xml
     lintXmlFilePath = "path/to/lint-results.xml"
