@@ -13,7 +13,7 @@ buildscript {
   }
   dependencies {
     classpath 'com.android.tools.build:gradle:0.12.+'
-    classpath 'com.droidtitan:lint-cleaner-plugin:0.12.+'
+    classpath 'com.droidtitan:lint-cleaner-plugin:0.1.0'
   }
 }
 
