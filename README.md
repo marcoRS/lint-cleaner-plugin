@@ -10,6 +10,7 @@ Clone this repository and run ```gradle install``` then apply the plugin in your
 buildscript {
   repositories {
     mavenCentral()
+    mavenLocal()
   }
   dependencies {
     classpath 'com.android.tools.build:gradle:0.12.+'
