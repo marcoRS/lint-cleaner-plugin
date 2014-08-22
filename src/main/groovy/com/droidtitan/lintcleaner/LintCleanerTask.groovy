@@ -23,16 +23,17 @@ class LintCleanerTask extends DefaultTask {
   /** Mapping of filePaths to a list of line numbers to be removed. */
   final Map<String, List<String>> filePathToLines = new HashMap<String, ArrayList<String>>()
   String lintXmlFilePath = "$project.buildDir/outputs/lint-results.xml"
-  boolean ignoreResFiles = false;
+  boolean ignoreResFiles = false
   boolean run = true
 
-  @TaskAction def removeUnusedResources() {
+  @TaskAction void removeUnusedResources() {
     if (!run) {
-      return;
+      return
     }
 
     if (!lintXmlFilePath || lintXmlFilePath.empty) {
       println 'Lint results xml file path is unspecified'
+      return
     }
 
     def lintFile = new File(lintXmlFilePath)
@@ -86,17 +87,17 @@ class LintCleanerTask extends DefaultTask {
     filePathToLines.each { filePath, unusedLines ->
       File sourceFile = new File(filePath)
       def sourceDir = sourceFile.getParentFile().toString()
-      File tempFile = new File("${sourceDir}/${sourceFile.name}bak");
+      File tempFile = new File("${sourceDir}/${sourceFile.name}bak")
 
       tempFile.withWriter { writer ->
         int index = 1
-        boolean removingArray = false;
+        boolean removingArray = false
         sourceFile.eachLine { line ->
 
-          String lineNumber = Integer.toString(index);
+          String lineNumber = Integer.toString(index)
           if (unusedLines.contains(lineNumber) || removingArray) {
             if (line.contains(ARRAY_XML_KEY)) {
-              removingArray = !removingArray;
+              removingArray = !removingArray
             }
           } else {
             writer << line + LINE_SEPARATOR
