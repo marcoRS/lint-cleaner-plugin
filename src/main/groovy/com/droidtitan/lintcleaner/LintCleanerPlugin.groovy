@@ -4,17 +4,18 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class LintCleanerPlugin implements Plugin<Project> {
-
   static final String GROUP = "LintCleaner"
-  static final String LINT_CLEAN_TASK = "lintClean"
-  static final String LINT_TASK = "lint"
-  static final String LINT_CLEAN_DESCRIPTION = "Removes unused resources reported by lint"
+  static final String ANDROID_LINT_TASK = "lint"
+  static final String EXTENSION_NAME = 'lintCleaner'
 
   @Override void apply(Project project) {
 
-    project.task(LINT_CLEAN_TASK, type: LintCleanerTask, dependsOn: LINT_TASK) {
-      group = GROUP
-      description = LINT_CLEAN_DESCRIPTION
+    project.extensions.create(EXTENSION_NAME, LintCleanerPluginExtension, project)
+
+    project.task(LintCleanerTask.NAME, type: LintCleanerTask, dependsOn: ANDROID_LINT_TASK) {
+      def extension = project.extensions.findByName(EXTENSION_NAME) as LintCleanerPluginExtension
+      conventionMapping.lintXmlFilePath = { extension.lintXmlFilePath }
+      conventionMapping.ignoreResFiles = { extension.ignoreResFiles }
     }
   }
 }

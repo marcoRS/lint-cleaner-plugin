@@ -5,39 +5,43 @@ import org.gradle.api.tasks.TaskAction
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.w3c.dom.NodeList
+
 import javax.xml.parsers.DocumentBuilderFactory
 
-/** Removes unused resources from projects by analyzing an Android lint xml file. */
 class LintCleanerTask extends DefaultTask {
+  static final String NAME = "lintClean"
 
   final String LINE_SEPARATOR = System.getProperty("line.separator")
   final String UNUSED_RESOURCES_ID = "UnusedResources"
+  final String ARRAY_XML_TAG = "array"
+  final String FILE_PATH_XML_TAG = "file"
+  final String ID_XML_TAG = "id"
+  final String ISSUE_XML_TAG = "issue"
+  final String LINE_XML_TAG = "line"
+  final String LOCATION_XML_TAG = "location"
 
-  final String ARRAY_XML_KEY = "array"
-  final String FILE_PATH_XML_KEY = "file"
-  final String ID_XML_KEY = "id"
-  final String ISSUE_XML_KEY = "issue"
-  final String LINE_XML_KEY = "line"
-  final String LOCATION_XML_KEY = "location"
-
-  /** Mapping of filePaths to a list of line numbers to be removed. */
   final Map<String, List<String>> filePathToLines = new HashMap<String, ArrayList<String>>()
-  String lintXmlFilePath = "$project.buildDir/outputs/lint-results.xml"
-  boolean ignoreResFiles = false
+  String lintXmlFilePath
+  boolean ignoreResFiles
+
+  LintCleanerTask() {
+    group = LintCleanerPlugin.GROUP
+    description = "Removes unused resources reported by the Android Plugin lint task"
+  }
 
   @TaskAction void removeUnusedResources() {
-    if (!lintXmlFilePath || lintXmlFilePath.empty) {
-      println 'Lint results xml file path is unspecified'
+    def lintFile = new File(getLintXmlFilePath())
+    if (!lintFile.exists()) {
+      println "$lintFile.absolutePath is not a lint xml file"
       return
     }
 
-    def lintFile = new File(lintXmlFilePath)
     def builderFactory = DocumentBuilderFactory.newInstance()
     Document lintDocument = builderFactory.newDocumentBuilder().parse(lintFile)
 
-    NodeList issues = lintDocument.getElementsByTagName(ISSUE_XML_KEY)
+    NodeList issues = lintDocument.getElementsByTagName(ISSUE_XML_TAG)
     processIssues(issues)
-    if (!ignoreResFiles) {
+    if (!getIgnoreResFiles()) {
       removeUnusedLinesInResFiles()
     }
   }
@@ -46,8 +50,8 @@ class LintCleanerTask extends DefaultTask {
     issues.each {
       Element issue = it as Element
 
-      if (issue.getAttribute(ID_XML_KEY).equals(UNUSED_RESOURCES_ID)) {
-        NodeList locations = issue.getElementsByTagName(LOCATION_XML_KEY)
+      if (issue.getAttribute(ID_XML_TAG).equals(UNUSED_RESOURCES_ID)) {
+        NodeList locations = issue.getElementsByTagName(LOCATION_XML_TAG)
 
         if (locations.length == 1) {
           processLocation(locations.item(0) as Element)
@@ -62,8 +66,8 @@ class LintCleanerTask extends DefaultTask {
 
   /** Removes unused files or adds filePath to map for processing by @removeUnusedLinesInResFiles. */
   void processLocation(Element location) {
-    String line = location.getAttribute(LINE_XML_KEY)
-    String filePath = location.getAttribute(FILE_PATH_XML_KEY)
+    String line = location.getAttribute(LINE_XML_TAG)
+    String filePath = location.getAttribute(FILE_PATH_XML_TAG)
 
     if (line.empty) {
       File file = new File(filePath)
@@ -91,7 +95,7 @@ class LintCleanerTask extends DefaultTask {
 
           String lineNumber = Integer.toString(index)
           if (unusedLines.contains(lineNumber) || removingArray) {
-            if (line.contains(ARRAY_XML_KEY)) {
+            if (line.contains(ARRAY_XML_TAG)) {
               removingArray = !removingArray
             }
           } else {
