@@ -105,13 +105,12 @@ class LintCleanerTask extends DefaultTask {
         }
       }
 
-      sourceFile.setWritable(true);
-      sourceFile.delete();
-      if( tempFile.renameTo(sourceFile) ) {
+      sourceFile.setWritable(true)
+      sourceFile.delete()
+      if (tempFile.renameTo(sourceFile)) {
         println "Removed entries from $sourceFile.name"
-      }
-      else {
-        tempFile.delete();
+      } else {
+        tempFile.delete()
         println "Failed to remove entries from $sourceFile.name"
       }
     }
