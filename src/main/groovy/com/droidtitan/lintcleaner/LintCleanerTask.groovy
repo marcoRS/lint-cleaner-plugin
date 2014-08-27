@@ -10,9 +10,10 @@ import javax.xml.parsers.DocumentBuilderFactory
 
 class LintCleanerTask extends DefaultTask {
   static final String NAME = "lintClean"
-
+  
   final String LINE_SEPARATOR = System.getProperty("line.separator")
   final String UNUSED_RESOURCES_ID = "UnusedResources"
+  final String WRITER_ENCODING = "UTF-8"
   final String ARRAY_XML_TAG = "array"
   final String FILE_PATH_XML_TAG = "file"
   final String ID_XML_TAG = "id"
@@ -88,7 +89,7 @@ class LintCleanerTask extends DefaultTask {
       def sourceDir = sourceFile.getParentFile().toString()
       File tempFile = new File("${sourceDir}/${sourceFile.name}bak")
 
-      tempFile.withWriter { writer ->
+      tempFile.withWriter(WRITER_ENCODING) { writer ->
         int index = 1
         boolean removingArray = false
         sourceFile.eachLine { line ->
