@@ -10,7 +10,7 @@ import javax.xml.parsers.DocumentBuilderFactory
 
 class LintCleanerTask extends DefaultTask {
   static final String NAME = "lintClean"
-  
+
   final String LINE_SEPARATOR = System.getProperty("line.separator")
   final String UNUSED_RESOURCES_ID = "UnusedResources"
   final String WRITER_ENCODING = "UTF-8"
@@ -109,11 +109,15 @@ class LintCleanerTask extends DefaultTask {
       sourceFile.setWritable(true)
       sourceFile.delete()
       if (tempFile.renameTo(sourceFile)) {
-        println "Removed entries from $sourceFile.name"
+        printEntryRemovalCount(sourceFile, unusedLines.size())
       } else {
         tempFile.delete()
         println "Failed to remove entries from $sourceFile.name"
       }
     }
+  }
+
+  static void printEntryRemovalCount(File file, int count) {
+    println "Removed $count ${count == 1 ? "entry" : "entries"} from $file.name"
   }
 }
