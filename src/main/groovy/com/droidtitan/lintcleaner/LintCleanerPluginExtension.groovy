@@ -3,6 +3,8 @@ package com.droidtitan.lintcleaner
 import org.gradle.api.Project
 
 class LintCleanerPluginExtension {
+
+  List<String> exclude = []
   String lintXmlFilePath
   boolean ignoreResFiles = false
 

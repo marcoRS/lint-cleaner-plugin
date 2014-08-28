@@ -16,6 +16,7 @@ class LintCleanerPlugin implements Plugin<Project> {
       def extension = project.extensions.findByName(EXTENSION_NAME) as LintCleanerPluginExtension
       conventionMapping.lintXmlFilePath = { extension.lintXmlFilePath }
       conventionMapping.ignoreResFiles = { extension.ignoreResFiles }
+      conventionMapping.excludes = { extension.exclude }
     }
   }
 }

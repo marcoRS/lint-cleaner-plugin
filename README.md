@@ -31,9 +31,13 @@ Finally, to remove unused resources use:
 
 ```groovy
 lintClean {
-    // Default configuration removes unused strings, colors, dimens.
-    ignoreResFiles = false
-    // Default configuration uses build/outputs/lint-results.xml
-    lintXmlFilePath = "path/to/lint-results.xml"
+    // Exclude specific files
+    exclude = ['com_crashlytics_export_strings.xml','config.xml']
+
+    // Ability to ignore all resource files. False by default. 
+    ignoreResFiles = true
+    
+    // Default path is build/outputs/lint-results.xml
+    lintXmlFilePath = 'path/to/lint-results.xml'
 }
 ```

@@ -22,6 +22,7 @@ class LintCleanerTask extends DefaultTask {
   final String LOCATION_XML_TAG = "location"
 
   final Map<String, List<String>> filePathToLines = new HashMap<String, ArrayList<String>>()
+  List<String> excludes
   String lintXmlFilePath
   boolean ignoreResFiles
 
@@ -42,7 +43,9 @@ class LintCleanerTask extends DefaultTask {
 
     NodeList issues = lintDocument.getElementsByTagName(ISSUE_XML_TAG)
     processIssues(issues)
+
     if (!getIgnoreResFiles()) {
+      excludes = getExcludes()
       removeUnusedLinesInResFiles()
     }
   }
@@ -86,6 +89,11 @@ class LintCleanerTask extends DefaultTask {
   void removeUnusedLinesInResFiles() {
     filePathToLines.each { filePath, unusedLines ->
       File sourceFile = new File(filePath)
+
+      if (excludes.contains(sourceFile.name)) {
+        return
+      }
+
       def sourceDir = sourceFile.getParentFile().toString()
       File tempFile = new File("${sourceDir}/${sourceFile.name}bak")
 
