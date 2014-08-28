@@ -30,7 +30,7 @@ Finally, to remove unused resources use:
 ## Optional Configuration using DSL
 
 ```groovy
-lintClean {
+lintCleaner {
     // Exclude specific files
     exclude = ['com_crashlytics_export_strings.xml','config.xml']
 
