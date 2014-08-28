@@ -10,11 +10,10 @@ Clone this repository and run ```gradle install``` then apply the plugin in your
 buildscript {
   repositories {
     mavenCentral()
-    mavenLocal()
   }
   dependencies {
     classpath 'com.android.tools.build:gradle:0.12.+'
-    classpath 'com.droidtitan:lint-cleaner-plugin:0.1.0'
+    classpath 'com.droidtitan:lint-cleaner-plugin:0.3.0'
   }
 }
 

@@ -1,8 +1,19 @@
-apply plugin: 'maven'
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.3'
+  }
+}
+
 apply plugin: 'groovy'
+apply plugin: 'maven'
+apply plugin: 'nexus'
 
 group = 'com.droidtitan'
-version = '0.1.0'
+version = '0.3.0'
 
 dependencies {
   repositories {
@@ -22,5 +33,41 @@ install {
 uploadArchives {
   repositories.mavenDeployer {
     pom.artifactId = 'lint-cleaner-plugin'
+  }
+}
+
+modifyPom {
+  project {
+    name 'Lint Cleaner Plugin'
+    description "A Gradle plugin that helps with the removal of unused resources in Android projects."
+    url 'https://github.com/marcoRS/lint-cleaner-plugin'
+    inceptionYear '2014'
+
+    scm {
+      url 'https://github.com/marcoRS/lint-cleaner-plugin'
+      connection 'scm:git:git://github.com:marcoRS/lint-cleaner-plugin.git'
+      developerConnection 'scm:git:ssh://git@github.com:marcoRS/lint-cleaner-plugin.git'
+    }
+
+    licenses {
+      license {
+        name 'The Apache Software License, Version 2.0'
+        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+        distribution 'repo'
+      }
+    }
+
+    organization {
+      name 'DroidTitan'
+      url 'http://droidtitan.com'
+    }
+
+    developers {
+      developer {
+        id 'marco'
+        name 'Marco Rodriguez-Suarez'
+        email 'mars@droidtitan.com'
+      }
+    }
   }
 }
