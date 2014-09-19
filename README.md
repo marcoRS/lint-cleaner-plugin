@@ -5,7 +5,7 @@ Removes unused resources reported by Android lint including strings, colors and 
 
 ## Usage
 
-Clone this repository and run ```gradle install``` then apply the plugin in your `build.gradle`:
+Apply the plugin in your `build.gradle`:
 
 ```groovy
 buildscript {
