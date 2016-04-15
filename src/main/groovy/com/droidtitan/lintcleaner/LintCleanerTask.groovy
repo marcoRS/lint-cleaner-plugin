@@ -58,10 +58,10 @@ class LintCleanerTask extends DefaultTask {
         NodeList locations = issue.getElementsByTagName(LOCATION_XML_TAG)
 
         if (locations.length == 1) {
-          processLocation(locations.item(0) as Element)
+          processLocation(issue, locations.item(0) as Element)
         } else {
           locations.each {
-            processLocation(it as Element)
+            processLocation(issue, it as Element)
           }
         }
       }
@@ -69,20 +69,39 @@ class LintCleanerTask extends DefaultTask {
   }
 
   /** Removes unused files or adds filePath to map for processing by @removeUnusedLinesInResFiles. */
-  void processLocation(Element location) {
+  void processLocation(Element issue, Element location) {
     String line = location.getAttribute(LINE_XML_TAG)
     String filePath = location.getAttribute(FILE_PATH_XML_TAG)
+    File file = new File(filePath)
 
     if (line.empty) {
-      File file = new File(filePath)
-      file.delete()
-      println "Removed $file.name"
-    } else {
-      List<String> lineNumbers = filePathToLines.get(filePath)
-      lineNumbers = lineNumbers ? lineNumbers : new ArrayList<String>()
-      lineNumbers.add(line)
-      filePathToLines.put(filePath, lineNumbers)
+      deleteFile(file)
+      return;
     }
+    // if resource name equals resource file name, delete file
+    String message = issue.getAttribute("message");
+    println message
+    def matcher = message =~ "\\`(.*)\\`"
+    if (matcher.count > 0) {
+      def resStr = matcher[0][1]
+      def resName = resStr.tokenize('.')[2];
+      def resFileName = file.name.tokenize('.')[0]
+      if (resFileName == resName) {
+        deleteFile(filePath)
+        return;
+      }
+    }
+    // handle resource in common resource file
+    List<String> lineNumbers = filePathToLines.get(filePath)
+    lineNumbers = lineNumbers ? lineNumbers : new ArrayList<String>()
+    lineNumbers.add(line)
+    filePathToLines.put(filePath, lineNumbers)
+  }
+
+  void deleteFile(File file)
+  {
+    file.delete()
+    println "Removed $file.name"
   }
 
   /** Removes unused resources from single files like strings.xml, color.xml etc. */
