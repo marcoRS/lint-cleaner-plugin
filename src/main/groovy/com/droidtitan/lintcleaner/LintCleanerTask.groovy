@@ -20,6 +20,7 @@ class LintCleanerTask extends DefaultTask {
   final String ISSUE_XML_TAG = "issue"
   final String LINE_XML_TAG = "line"
   final String LOCATION_XML_TAG = "location"
+  final String MESSAGE_XML_TAG = "message"
 
   final Map<String, List<String>> filePathToLines = new HashMap<String, ArrayList<String>>()
   List<String> excludes
@@ -79,7 +80,7 @@ class LintCleanerTask extends DefaultTask {
       return;
     }
     // if resource name equals resource file name, delete file
-    String message = issue.getAttribute("message");
+    String message = issue.getAttribute(MESSAGE_XML_TAG);
     println message
     def matcher = message =~ "\\`(.*)\\`"
     if (matcher.count > 0) {
