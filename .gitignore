@@ -5,3 +5,4 @@ build
 classes
 local.properties
 .DS_Store
+.gradletasknamecache
