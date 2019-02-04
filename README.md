@@ -3,6 +3,11 @@
 
 Removes unused resources reported by Android lint including strings, colors and dimensions.
 
+## Depracated
+As of Android Studio 2.0+ you can use `Refactor -> Remove Unused Resources`
+
+![ScreenShot](/images/remove-unused-resources.png)
+
 ## Usage
 
 Apply the plugin in your `build.gradle`:
