@@ -25,6 +25,7 @@ class LintCleanerTask extends DefaultTask {
   List<String> excludes
   String lintXmlFilePath
   boolean ignoreResFiles
+  boolean ignoreDrawableFiles
 
   LintCleanerTask() {
     group = LintCleanerPlugin.GROUP
@@ -56,7 +57,6 @@ class LintCleanerTask extends DefaultTask {
 
       if (issue.getAttribute(ID_XML_TAG).equals(UNUSED_RESOURCES_ID)) {
         NodeList locations = issue.getElementsByTagName(LOCATION_XML_TAG)
-
         if (locations.length == 1) {
           processLocation(locations.item(0) as Element)
         } else {
@@ -73,7 +73,7 @@ class LintCleanerTask extends DefaultTask {
     String line = location.getAttribute(LINE_XML_TAG)
     String filePath = location.getAttribute(FILE_PATH_XML_TAG)
 
-    if (line.empty) {
+    if (notValuesRes(filePath) || line.empty) {
       File file = new File(filePath)
       file.delete()
       println "Removed $file.name"
@@ -83,6 +83,13 @@ class LintCleanerTask extends DefaultTask {
       lineNumbers.add(line)
       filePathToLines.put(filePath, lineNumbers)
     }
+  }
+
+
+
+  // If a unused resources is a string reference or color reference
+  boolean notValuesRes(String filePath){
+    return !filePath.contains("res/values/")
   }
 
   /** Removes unused resources from single files like strings.xml, color.xml etc. */
